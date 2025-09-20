@@ -1,0 +1,12 @@
+extended report
+Allure
+kribana-dashboard report 
+Grafana-dashboard report
+create object for extend reporter in before suite
+extendhtmlreporter create object for it
+then attach extend report to extend object
+add test case name to report using Extendt estm object 
+flush method is used to store content in file
+useextendReport.flush()
+log is used to extended report
+addscreenshot
