@@ -1,4 +1,4 @@
-extended report
+asss extended report
 Allure
 kribana-dashboard report 
 Grafana-dashboard report
@@ -9,4 +9,5 @@ add test case name to report using Extendt estm object
 flush method is used to store content in file
 useextendReport.flush()
 log is used to extended report
+
 addscreenshot
