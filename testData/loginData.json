@@ -1,0 +1,18 @@
+{
+  "validAdmin": {
+    "email": "admin@example.com",
+    "password": "password123"
+  },
+  "validArchitect": {
+    "email": "dhoni@yopmail.com",
+    "password": "Admin@123"
+  },
+  "invalidCredentials": {
+    "email": "invalid@example.com",
+    "password": "wrongpass"
+  },
+  "emptyCredentials": {
+    "email": "",
+    "password": ""
+  }
+}

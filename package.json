@@ -1,0 +1,19 @@
+{
+  "name": "symphony-automation",
+  "version": "1.0.0",
+  "description": "Playwright automation framework for Symphony Furnishings fabric portal.",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:report": "playwright show-report",
+    "test:grep": "playwright test --grep"
+  },
+  "keywords": ["playwright", "automation", "POM", "QA"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^25.7.0"
+  }
+}

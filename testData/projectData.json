@@ -1,0 +1,13 @@
+{
+  "defaultProject": {
+    
+    "client": "Symphony QA",
+    "startDate": "2026-06-01"
+  },
+  "adminValidationProject": {
+    "email": "admin@symphony.com",
+    "client": "Symphony Admin",
+    
+    "projectType":"Hospital"
+  }
+}
