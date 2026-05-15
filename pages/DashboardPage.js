@@ -1,7 +1,7 @@
 export default class DashboardPage {
   constructor(page) {
     this.page = page;
-    this.createProjectButton = page.getByRole('button', { name: /create|Add project/i });
+    this.createProjectButton = page.getByRole('button', { name: /create|Add/i });
     this.projectList = page.locator('[data-testid="project-list"], .project-list, table');
     this.profileMenu = page.getByRole('button', { name: /profile|menu|account/i }).first();
     this.logoutOption = page.getByRole('button', { name: /log\s?out|sign\s?out/i }).first();

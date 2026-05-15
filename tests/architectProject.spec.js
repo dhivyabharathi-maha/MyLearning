@@ -26,7 +26,13 @@ test.describe('Architect Project Workflows', () => {
     });
 
     const successMessage = await projectPage.getSuccessMessage();
+
+   
     expect(successMessage).toMatch(/successfully|saved|created/i);
-    expect(await dashboardPage.isProjectPresent(newProjectName)).toBeTruthy();
+  
+   
+   expect(await projectPage.completeProjectVerification(newProjectName)).toBeTruthy(); 
+   expect(await projectPage.verifyProjectType(newProjectName)).toBe(projectData.defaultProject.projectType);
+     expect(await projectPage.projectStatusBadge.first().textContent()).toMatch(/in progress/i);
   });
 });

@@ -1,13 +1,13 @@
 {
   "defaultProject": {
-    
+    "email": "architect@symphony.com",
+    "phone": "9999999999",
     "client": "Symphony QA",
-    "startDate": "2026-06-01"
+    "projectType":"Hospital"
   },
   "adminValidationProject": {
     "email": "admin@symphony.com",
     "client": "Symphony Admin",
-    
     "projectType":"Hospital"
   }
 }
