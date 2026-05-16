@@ -1,7 +1,9 @@
 import { expect } from "@playwright/test";
 
 export default class ProjectPage {
+  
   constructor(page) {
+    
     this.page = page;
     this.projectNameInput = page.getByLabel(/project name/i).first();
     this.emailInput = page.getByLabel(/email/i).first();
@@ -10,10 +12,11 @@ export default class ProjectPage {
     this.projectType = page.locator('select').first();
     this.saveButton = page.getByRole('button', { name: /save|Add|submit/i }).first();
     this.successToast = page.locator('text=/successfully|saved|created/i');
-    this.projectStatusBadge = page.locator('[class*="status"], [class*="state"]');
+     this.projectStatusBadge = page.locator('span[data-slot="badge"]').nth(1);
+    
     this.projectOpenState = page.locator('text=/open|active/i');
     this.roomCount = page.locator('[class*="room"], text=/room/i');
-    
+   
     // Room specific locators
     this.mainRoomCount = page.locator('text=/main/i');
     this.sheerRoomCount = page.locator('text=/sheer/i');
@@ -26,7 +29,7 @@ export default class ProjectPage {
     this.editProjectIcon = page.locator('button[title*="edit"], button[aria-label*="edit"], [class*="edit-icon"]');
     this.deleteIcon = page.locator('button[title*="delete"], button[aria-label*="delete"], [class*="delete-icon"]');
   }
-
+   
   async createProject(project) {
     console.log('Creating project:', project);
     await this.projectNameInput.fill(project.name);
@@ -107,24 +110,7 @@ export default class ProjectPage {
     }
   }
 
-  // MCP Playwright Server - Verify project state and room count
-  async verifyProjectStatusAndRoomCount(projectName, expectedState = 'open', expectedRoomCount = null) {
-    const isOpen = await this.verifyProjectIsOpen(projectName);
-    const roomCount = await this.getRoomCount(projectName);
-    
-    const result = {
-      projectName,
-      isOpen: isOpen,
-      expectedState,
-      roomCount,
-      expectedRoomCount,
-      validated: isOpen && (expectedRoomCount === null || roomCount === expectedRoomCount)
-    };
-    
-    console.log(`Project Status: ${JSON.stringify(result)}`);
-    return result;
-  }
-
+  
   // MCP Playwright Server - Get individual room counts (main, sheer, headboard)
   async getIndividualRoomCounts(projectName) {
     try {
@@ -221,8 +207,34 @@ async verifyActionIconsPresence(projectName) {
 
   } 
 
+  //icon not present
+  async verifyActionIconsNotPresence(projectName) {
+ 
+
+  await expect(
+    this.page.getByRole('button', {
+      name: 'Schedule Appointment'
+    })
+  ).not.toBeVisible();
+
+  await expect(
+    this.page.getByRole('button', {
+      name: 'Edit Project'
+    })
+  ).not.toBeVisible();
+
+  await expect(
+    this.page.getByRole('button', {
+      name: 'Delete Project'
+    })
+  ).not.toBeVisible();
+
+  return true;
+
+  } 
+
   // MCP Playwright Server - Complete project verification (all checks)
-  async completeProjectVerification(projectName) {
+  async completeProjectVerification(projectName, projectType) {
     await this.page.waitForTimeout(1000);
     await this.page.getByRole('link', { name: 'Projects' }).click();
     if (await this.searchInput.isVisible().catch(() => false)) {
@@ -231,6 +243,10 @@ async verifyActionIconsPresence(projectName) {
     }
     await this.page.waitForTimeout(1000);
 await this.page.getByRole('button', { name: 'Collapse Sidebar' }).click();
+ const enteredProjectType = this.page.locator('span', {
+    hasText: projectType
+}).first();
+await expect(enteredProjectType).toBeVisible();
     const isOpen = await this.verifyProjectIsOpen(projectName);
     const roomCounts = await this.getIndividualRoomCounts(projectName);
     const sopaIsZero = await this.verifySopaCountIsZero(projectName);
@@ -255,4 +271,47 @@ await this.page.getByRole('button', { name: 'Collapse Sidebar' }).click();
     console.log(`Complete Project Verification: ${JSON.stringify(result)}`);
     return result;
   }
+
+  //verification from admin side
+  async completeProjectVerificationInAdmin(projectName, projectType,projectStatusText) {
+    await this.page.waitForTimeout(1000);
+    await this.page.getByRole('link', { name: 'Projects' }).click();
+    if (await this.searchInput.isVisible().catch(() => false)) {
+      await this.searchInput.fill(projectName);
+      await this.page.keyboard.press('Enter');
+    }
+    await this.page.waitForTimeout(1000);
+await this.page.getByRole('button', { name: 'Collapse Sidebar' }).click();
+ const enteredProjectType = this.page.locator('span', {
+    hasText: projectType
+}).first();
+await expect(enteredProjectType).toBeVisible();
+    const isOpen = await this.verifyProjectIsOpen(projectName);
+    const roomCounts = await this.getIndividualRoomCounts(projectName);
+    const sopaIsZero = await this.verifySopaCountIsZero(projectName);
+    const apptDate = await this.getAppointmentDate(projectName);
+    const actionIcons = await this.verifyActionIconsNotPresence(projectName);
+    const roomCount=await this.getRoomCount(projectName);
+   const projectStatus = await this.page.getByText(projectStatusText, { exact: true }).first();
+   await expect(projectStatus).toBeVisible();
+    const result = {
+      projectName,
+      isOpen,roomCount,
+      roomCounts: {
+        main: roomCounts.main,
+        sheer: roomCounts.sheer,
+        headboard: roomCounts.headboard
+      },
+      enteredProjectType: await enteredProjectType.textContent(),
+      sopaCountIsZero: sopaIsZero,
+      appointmentDate: apptDate,
+      actionIcons,
+      allValidated: isOpen && sopaIsZero && actionIcons.scheduleAppointmentIcon && actionIcons.editProjectIcon && actionIcons.deleteIcon
+    };
+    
+    console.log(`Complete Project in admin Page Verification: ${JSON.stringify(result)}`);
+    return result;
+  }
 }
+
+

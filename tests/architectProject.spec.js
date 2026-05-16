@@ -11,8 +11,9 @@ test.describe('Architect Project Workflows', () => {
     }
   });
 
-  test('Create new project and verify it appears in architect project list', async ({ loginPage, dashboardPage, projectPage }) => {
+  test('Create new project in architect login and verify added project is integrated with admin login', async ({ loginPage, dashboardPage, projectPage,adminProjectPage }) => {
     const architect = loginData.validArchitect;
+    const admin = loginData.validAdmin;
     const newProjectName = getRandomProjectName('ArchitectProject');
     await loginPage.login(architect.email, architect.password);
     await dashboardPage.navigateToNewProject();
@@ -31,8 +32,18 @@ test.describe('Architect Project Workflows', () => {
     expect(successMessage).toMatch(/successfully|saved|created/i);
   
    
-   expect(await projectPage.completeProjectVerification(newProjectName)).toBeTruthy(); 
-   expect(await projectPage.verifyProjectType(newProjectName)).toBe(projectData.defaultProject.projectType);
-     expect(await projectPage.projectStatusBadge.first().textContent()).toMatch(/in progress/i);
-  });
+   expect(await projectPage.completeProjectVerification(newProjectName, projectData.defaultProject.projectType)).toBeTruthy(); 
+  
+     expect(await projectPage.projectStatusBadge.first().textContent()).toMatch(/NOT_REQUESTED/i);
+  await dashboardPage.logout();
+  await loginPage.login(admin.email, admin.password);
+    await adminProjectPage.gotoAllProjects();
+    await adminProjectPage.searchProject(newProjectName);
+await 
+    expect(await adminProjectPage.isProjectVisible(newProjectName)).toBeTruthy();
+
+    expect(await projectPage.completeProjectVerificationInAdmin(newProjectName, projectData.defaultProject.projectType,"In Progress")).toBeTruthy(); 
+  
+     
+    });
 });

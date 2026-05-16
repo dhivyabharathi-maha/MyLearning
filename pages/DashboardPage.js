@@ -1,13 +1,14 @@
 export default class DashboardPage {
   constructor(page) {
     this.page = page;
-    this.createProjectButton = page.getByRole('button', { name: /create|Add/i });
+    this.createProjectButton = page.getByRole('button', { name: /Add Project/i }).first();
     this.projectList = page.locator('[data-testid="project-list"], .project-list, table');
     this.profileMenu = page.getByRole('button', { name: /profile|menu|account/i }).first();
     this.logoutOption = page.getByRole('button', { name: /log\s?out|sign\s?out/i }).first();
   }
 
   async navigateToNewProject() {
+   await this.page.waitForTimeout(1000);
     await this.createProjectButton.click();
     await this.page.waitForLoadState('networkidle');
   }
