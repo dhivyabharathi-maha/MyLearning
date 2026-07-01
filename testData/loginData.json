@@ -4,8 +4,8 @@
     "password": "password123"
   },
   "validArchitect": {
-    "email": "dhoni@yopmail.com",
-    "password": "Admin@123"
+    "email": "ttarchitect@example.com",
+    "password": "Admin@123456"
   },
   "invalidCredentials": {
     "email": "invalid@example.com",

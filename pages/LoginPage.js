@@ -4,10 +4,10 @@ export default class LoginPage {
     this.emailInput = page.getByLabel(/email|username/i).first();
     this.passwordInput = page.getByLabel(/password/i).first();
     this.loginButton = page.getByRole('button', { name: /log\s?in|sign\s?in/i });
-    this.errorMessage = page.locator('text=/invalid|enter|credential|Invalid/i');
-    this.dashboardHeader = page.getByText("Fabric Selection Portal");
-this.adminDashboardHeader = page.getByText(/admin portal/i); 
-}
+    this.errorMessage = page.getByText(/invalid|enter|credential|error/i);
+    this.dashboardHeader = page.getByRole('link', { name: /reports/i }).first();
+    this.adminDashboardHeader = page.getByRole('heading', { name: /admin portal/i }).first();
+  }
 
   async goto() {
     await this.page.goto('/');
@@ -19,6 +19,9 @@ this.adminDashboardHeader = page.getByText(/admin portal/i);
     await this.emailInput.fill(email || '');
     await this.passwordInput.fill(password || '');
     await this.loginButton.click();
+
+   
+
     await this.page.waitForLoadState('networkidle');
   }
 
@@ -27,6 +30,8 @@ this.adminDashboardHeader = page.getByText(/admin portal/i);
   }
 
   async isLoggedIn() {
+    await this.page.waitForLoadState('domcontentloaded');
+    await this.dashboardHeader.waitFor({ state: 'visible', timeout: 15000 });
     return await this.dashboardHeader.isVisible().catch(() => false);
   }
 

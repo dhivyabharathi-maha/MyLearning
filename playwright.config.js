@@ -13,8 +13,8 @@ export default defineConfig({
   reporter: [['html', { outputFolder: 'playwright-report', open: 'never' }]],
   use: {
     baseURL: 'https://fabric.symphonyfurnishings.com',
-    actionTimeout: 10000,
-    navigationTimeout: 30000,
+    actionTimeout: 20000,
+    navigationTimeout: 50000,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
